@@ -1,0 +1,16 @@
+#Apple Stuff
+*.DS_Store
+**/*.DS_Store
+#Windows Stuff
+**/*.bat
+#git
+.git/
+.gitattributes
+.gitignore
+_git/
+#docker
+.dockerignore
+#Data
+/data/*
+#Container
+_docker_host/
