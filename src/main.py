@@ -31,7 +31,7 @@ def laundry_func(x):
         return -1 if (math.isnan(float(str(x)))) else x
     except:
         return -1
-data[features] = data[features].map(laundry_func)
+data[features] = data[features].applymap(laundry_func)
 
 print(f"Input Data:\n{data[features].fillna(0)}")
 
