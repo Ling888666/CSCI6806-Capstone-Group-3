@@ -1,0 +1,275 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{\textbf{Optimizing Defective Product Prediction with Advanced Feature Engineering and Model Tuning}\\
+%{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
+%should not be used}
+%\thanks{Identify applicable funding agency here. If none, delete this.}
+}
+
+
+\author{
+\IEEEauthorblockN{\centering 
+\begin{minipage}{.3\textwidth}
+    \centering
+    1\textsuperscript{st} Zhengli Xu \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    z.xu6@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    2\textsuperscript{nd} Xinyu Chen \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    x.chen2@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    3\textsuperscript{rd} Yingyan Du \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    y.du1@student.fdu.edu
+\end{minipage}
+}
+\and
+\IEEEauthorblockN{\centering 
+\begin{minipage}{.45\textwidth}
+    \centering
+    4\textsuperscript{th} Youran Xu \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    y.xu3@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    5\textsuperscript{th} Ling Li \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    l.li1@student.fdu.edu
+\end{minipage}
+}
+}
+
+
+
+
+\maketitle
+
+\begin{abstract}
+This project aims to enhance the predictive performance of defective product identification in online sales systems using machine learning techniques. The original paper compares logistic regression and linear regression for this task, but it lacks advanced algorithmic comparison, hyperparameter tuning, and insights into feature importance. This project will address these issues by introducing new models such as Random Forest, Gradient Boosting, and time-series forecasting techniques, optimizing models through hyperparameter tuning, and using feature interpretation methods like SHAP and LIME. These enhancements aim to increase prediction accuracy and improve the robustness of the models.
+\end{abstract}
+
+%\begin{IEEEkeywords}
+%component, formatting, style, styling, insert
+%\end{IEEEkeywords}
+
+\section{Introduction}
+\subsection{Problem Statement}
+The original study, "Prediction of Defective Products Using Logistic Regression Algorithm against Linear Regression Algorithm for Better Accuracy", identified logistic regression as the superior model for predicting defective products, achieving 84.2\% accuracy compared to 76.0\% for linear regression. However, the study does not incorporate advanced machine learning techniques, hyperparameter tuning, or cross-validation, which limits the generalizability and potential accuracy improvements.
+\subsection{Importance}
+Accurately predicting defective products is crucial for improving supply chain efficiency, reducing costs, and enhancing customer satisfaction. Improving predictive accuracy will have tangible impacts on the logistics and e-commerce industries.
+\subsection{Challenges}
+The challenges include optimizing hyperparameters, integrating advanced models like Random Forest and Gradient Boosting, addressing the limitations of small datasets, and potentially introducing time-series forecasting for capturing temporal dependencies in the data. Additionally, ensuring model interpretability while avoiding overfitting is crucial.
+\subsection{Solution}
+This project proposes to improve the existing prediction models by incorporating ensemble learning techniques, time-series forecasting, hyperparameter tuning, and feature interpretation methods such as SHAP and LIME. K-fold cross-validation will also be applied to ensure robust performance and generalizability across datasets.
+\subsection{Contribution}
+This study contributes by introducing advanced machine learning algorithms, feature importance analysis, and potentially time-series modeling for defective product prediction. These improvements are expected to deliver superior accuracy and offer deeper insights into the factors influencing product defects, thereby aiding better decision-making in logistics and supply chain management.
+
+
+\section{Related Work}
+
+\subsection{Existing Solutions}
+
+Predicting defective products remains a major challenge in the field of manufacturing and quality assurance. To address this issue, many researchers have worked to develop new procedures and techniques that can consistently predict potential defects before the product reaches the user. A survey of the existing literature has yielded a wide range of methodologies, each of which provides a unique perspective in the ongoing search for defect mitigation.In the past five years, the main methods to solve such problems are:
+
+\subsubsection{Solution 1}
+Vasantha N., Surendran R., Madhusundar N., et al. \cite{vasu2022prediction} examined alternative techniques for predicting online product defect rates using machine learning algorithms, especially logistic regression and linear regression. Their study ultimately showed that logistic regression \cite{thota2020survey} significantly outperformed linear regression in detecting product defects, based on a comparative analysis of the precision and accuracy of the two methods \cite{vasu2022prediction}.
+
+\subsubsection{Solution 2}
+Elisa V., Gianfranco G., Maurizio G. et al. \cite{verna2022defect} introduced a new structural complexity-based approach for predicting defects in assembled products. Their approach emphasizes the objective assessment of product complexity, eliminating the need for expert evaluation and assembly experience. The approach draws on the concepts of the structural complexity paradigm developed by Sinha and Alkan to establish an index that takes into account the complexity of product elements as well as the impact of assembly topology.
+
+When compared with the industry-accepted Shibata-Su model, the new model shows higher accuracy and precision in predicting defect rates due to the elimination of the variability associated with subjective expert evaluation \cite{verna2022defect}. A comprehensive review of the use of ensemble learning in the field of software defect prediction (SDP) \cite{matloob2021software} includes a systematic literature review, a catalog of common and less common ensemble learning algorithms, the criticality of feature selection and data sampling, evaluation metrics for assessing the performance of prediction models, the widely adopted machine learning platform WEKA, and several promising frameworks for ensemble learning.
+
+\subsubsection{Solution 3}
+In addition, Hang R., Bogdan D., Li Z., et al. \cite{ruan2022deep} identified various methodological and technical perspectives related to defective product prediction, such as deep learning-based prediction methods, strategies for model training using simulated data to address the challenge of imbalanced data distribution, methods to address cumulative uncertainty in multi-step predictions, and the application of spatiotemporal convolutional models for multi-class classification.
+
+A horizontal comparison of these academic articles reveals several key technical points for addressing the challenge of product defect prediction:
+
+\paragraph{Objectivity}
+The approach documented in \cite{verna2022defect} emphasizes reliance on product design intelligence when actual production data or physical prototypes are not available, thereby reducing errors caused by subjective judgment.
+\paragraph{Structural complexity paradigm}
+Recognizing the structural complexity of the product is necessary when predicting defects. The approach described in \cite{verna2022defect} merges the consideration of product design and process complexity rather than treating the two separately.
+\paragraph{Use of machine learning}
+ According to the research results of Vasantha N., Surendran R., Madhusundar N. et al. \cite{vasu2022prediction}, the use of machine learning algorithms is more effective than traditional statistical techniques in processing online sales data and estimating product defect rates in real time.
+\paragraph{Precision and accuracy}
+A comparative study of different regression methodologies showed that there are differences in precision and accuracy between machine learning models in defect prediction, with logistic regression performing well in outperforming linear regression \cite{vasu2022prediction}.
+
+In summary, the above paper research results show that the synergistic integration of objective evaluation with modern data analysis approaches improves the performance of models for forecasting product problems.
+
+\subsection{Comparison}
+In our research, we want to find some other approaches to improve defective product prediction includes key advancements that distinguish it from existing methods:
+\subsubsection{Interaction Terms}
+Based on the various methods and predicted accuracies discussed in earlier papers, we propose integrating interaction terms to reflect the potential complicated interactions between variables. This strategy is intended to improve the granularity and accuracy of defect prediction models. An examination of the interaction effects of several variables in linear or logistic regression models may reveal the collective impact on faults when specific parameters overlap.
+\subsubsection{Time-based patterns}
+Recognizing that defect rates might change over time owing to aging products or new technology, our methodology involves examining time-series data to forecast and understand the patterns and cyclical nature of defect occurrences. This is accomplished by combining time-stamped data and applying models that are skilled at time series analysis.
+\subsubsection{Random Forest}
+ As an ensemble learning method, Random Forest can improve prediction stability and resilience, making it a viable contender for defect product forecasting applications. Averaging several tree model outputs improves prediction while lowering the danger of overfitting.
+\subsubsection{Gradient Boosting}
+Gradient Boosting is another ensemble learning strategy that minimizes the loss function by creating consecutive models. This strategy can be used to correct mistakes in prior models, improving prediction precision.
+\subsubsection{XGBoost}
+ An efficient implementation of the Gradient Boosting algorithm, XGBoost has been widely used for a variety of machine learning applications. XGBoost's optimized calculation speed and resource use allow for faster training and better prediction performance. Using XGBoost to predict defective products is a viable route for increasing accuracy because it is often faster to execute and often has higher accuracy than Random Forest.
+Ideally, we want to create a multi-model ensemble prediction system that leverages the strengths of different models to improve forecast accuracy. Furthermore, the continuous collecting and analysis of new data, together with frequent model tweaks and optimizations, is a key procedure for improving forecast accuracy.
+
+\section{Design and Implementation}
+\subsection{Solution Strategy}
+To enhance the predictive accuracy of defective product identification in online sales systems, our approach integrates advanced machine learning techniques with rigorous model optimization and interpretability methods. We will commence with an extensive data preprocessing phase to ensure data quality and reliability, which is critical for the success of any predictive modeling effort.
+
+Building upon the baseline logistic regression model from the original study, we will introduce ensemble learning algorithms such as Random Forest and Gradient Boosting (using XGBoost). These models are chosen for their proven ability to handle complex, non-linear relationships in data and to improve predictive performance over traditional methods.
+
+Hyperparameter tuning will be a key component of our strategy. By employing systematic search techniques like Grid Search and Random Search, we aim to identify the optimal set of parameters for each model, thereby maximizing their predictive capabilities. Cross-validation methods, specifically K-fold cross-validation, will be utilized to ensure that our models generalize well to unseen data and are not overfitting to the training set.
+
+Recognizing the potential impact of temporal factors on product defects, we will explore time-series forecasting methods if the data exhibits temporal dependencies. Models such as ARIMA or LSTM neural networks may be applied to capture trends and seasonality in the defect rates, providing a more comprehensive understanding of the underlying patterns.
+
+To ensure that our models are not only accurate but also interpretable, we will try to employ feature interpretation techniques like SHAP (SHapley Additive exPlanations) and LIME (Local Interpretable Model-agnostic Explanations). These tools will help us understand the contribution of each feature to the model's predictions, offering valuable insights for business decision-making.
+
+\subsection{Project Description}
+The outcome of this project will be a robust predictive model that significantly improves the identification of defective products in online sales platforms. By leveraging advanced algorithms and thorough optimization, the model is expected to outperform the original logistic and linear regression models in terms of accuracy and reliability.
+Additionally, the model will provide detailed insights into feature importance and temporal trends influencing product defects. This information can be instrumental for businesses in refining their inventory management, quality control processes, and overall supply chain efficiency. The interpretability of the model ensures that stakeholders can trust and act upon the predictions made.
+
+\subsubsection{Algorithms}
+\paragraph{Logistic Regression}
+ Serving as the baseline model, it provides a benchmark against which improvements from advanced models can be measured.
+\paragraph{Random Forest}
+An ensemble learning method that constructs multiple decision trees and merges their outcomes. It is effective in handling large datasets with high dimensionality and capturing complex feature interactions.
+\paragraph{LightGBM}
+A highly efficient gradient-boosting framework based on decision trees. It splits trees leaf-wise, making it faster and more memory-efficient than traditional boosting methods, especially on large datasets with many features.
+\paragraph{Gradient Boosting (XGBoost)}
+A powerful boosting algorithm that builds models sequentially, each one correcting the errors of the previous. XGBoost is known for its efficiency and superior performance, particularly with structured data.
+\paragraph{Time-Series Forecasting (LSTM/ARIMA)}
+LSTM (Long Short-Term Memory Networks) is A type of recurrent neural network capable of learning long-term dependencies in sequence data, useful for modeling complex temporal patterns. ARIMA (AutoRegressive Integrated Moving Average) is suitable for capturing linear temporal relationships in univariate time series data.
+
+\subsubsection{Implementation}
+\paragraph{Hardware and Environment}
+\begin{itemize}
+    \item Hardware: Standard multi-core CPUs, with GPU support if needed for deep learning models.
+    \item Operating System: Linux/Windows environments for development and execution.
+\end{itemize}
+
+\paragraph{Languages and Tools}
+\begin{itemize}
+    \item Python: The primary language for this project due to its rich ecosystem of libraries for data science and machine learning.
+    \item R and SPSS: Used as supplementary tools for advanced statistical analysis, including hypothesis testing and validation of model results.
+\end{itemize}
+
+\paragraph{Libraries and Frameworks}
+\begin{itemize}
+    \item Pandas: For data manipulation and preprocessing tasks.
+    \item NumPy: For numerical computations and handling of large arrays.
+    \item Scikit-learn: Implementing logistic regression, Random Forest, and providing tools for model evaluation and selection.
+    \item  XGBoost: Leveraging its optimized implementation of Gradient Boosting for improved performance.
+    \item Potentially used for developing LSTM models if deep learning is pursued for time-series forecasting.
+    \item Statsmodels: For implementing ARIMA models and conducting statistical tests pertinent to time-series data.
+    \item GridSearchCV and RandomizedSearchCV (from Scikit-learn): For systematic exploration of hyperparameter spaces to identify optimal model configurations.
+    \item SHAP: To quantify the impact of each feature on the model's output.
+    \item LIME: To provide local explanations of individual predictions.
+    \item Matplotlib and Seaborn: For creating informative plots and visualizations that aid in data exploration and result presentation.
+\end{itemize}
+
+\subsubsection{Methodology}
+\paragraph{Data Preprocessing}
+
+\begin{description}
+    \item Data Cleaning: Detect and address missing values, duplicates, and inconsistencies. Decide on appropriate imputation methods or data exclusion criteria based on the extent and nature of missing data.
+    \item Feature Scaling and Encoding: Apply normalization or standardization to numerical features to ensure they contribute equally to model training. Encode categorical variables using techniques like One-Hot Encoding or Target Encoding, depending on the algorithm requirements.
+    \item Outlier Detection: Identify outliers that may adversely affect model performance using statistical methods or visualization techniques, and determine appropriate handling strategies.
+\end{description}
+
+\paragraph{Exploratory Data Analysis (EDA)}
+\begin{description}
+    \item Statistical Summaries: Compute descriptive statistics to understand the central tendencies and dispersion of the data.
+    \item Correlation Analysis: Examine relationships between features using correlation matrices or pair plots to identify multicollinearity or potential feature interactions.
+    \item Visualization: Create histograms, box plots, and scatter plots to visually assess data distributions and relationships.
+\end{description}
+
+\paragraph{Feature Engineering}
+\begin{description}
+    \item Creation of New Features: Generate interaction terms or polynomial features that may capture nonlinear relationships.
+    \item Dimensionality Reduction: Use techniques like Principal Component Analysis (PCA) if necessary to reduce the feature space while retaining most of the variance.
+    \item Temporal Features: If timestamps are available, extract features like day of the week, month, or season to capture temporal patterns.
+\end{description}
+
+\paragraph{Model Development}
+\begin{description}
+    \item Baseline Model: Implement logistic regression to establish a reference point for model performance. Evaluate using appropriate classification metrics.
+    \item Advanced Models: Random Forest: Train with default parameters initially. Assess performance improvements over the baseline. Gradient Boosting (XGBoost): Implement and compare results with Random Forest and logistic regression. Time-Series Models: If applicable, model temporal aspects using ARIMA or LSTM. Assess whether incorporating time-series models improves predictive accuracy.
+\end{description}
+
+\paragraph{Hyperparameter Tuning}
+\begin{description}
+    \item Parameter Selection: Identify key hyperparameters for each model (e.g., number of trees, max depth for Random Forest; learning rate, nestimators for XGBoost). 
+    \item Optimization Process: Use GridSearchCV for exhaustive search within a defined parameter grid when feasible. Apply RandomizedSearchCV for larger parameter spaces to save computational time. Cross-Validation: Implement K-fold cross-validation (e.g., 5-fold or 10-fold) to ensure that the tuning process accounts for variability in the data.
+\end{description}
+
+\paragraph{Model Evaluation}
+\begin{description}
+    \item Performance Metrics: Use metrics such as accuracy, precision, recall, F1-score, and ROC-AUC to evaluate classification performance comprehensively. 
+    \item Statistical Validation: Conduct statistical tests (e.g., paired t-tests) to determine if differences in model performance are statistically significant. Confusion Matrix 
+    \item Analysis: Examine confusion matrices to understand types of errors and areas for improvement.
+\end{description}
+
+\paragraph{Model Interpretation and Insights}
+\begin{description}
+    \item Feature Importance: Extract feature importance scores from ensemble models. Use SHAP values to interpret the impact of each feature globally and locally. 
+    \item Visualization of Results: Create plots to illustrate feature effects, such as SHAP summary plots or LIME explanations for specific instances.
+\end{description}
+
+\paragraph{Deployment Considerations}
+\begin{description}
+    \item Although not deploying the model in a production environment, we will ensure that the model is scalable and can be integrated into existing systems if needed. 
+\end{description}
+
+\paragraph{Documentation and Reporting}
+\begin{description}
+    \item Experiment Tracking: Keep detailed records of all experiments, including data preprocessing steps, feature engineering, model configurations, and results. 
+    \item Final Report: Compile a comprehensive report detailing methodologies, findings, and recommendations. Include visualizations and interpretation of results to aid understanding.
+\end{description}
+
+
+\section*{Acknowledgment}
+We would like to express our sincere gratitude to our project advisor, Dr. Jeeho Ryoo, for his invaluable guidance, insightful feedback, and continuous support throughout the course of this project. His expertise and encouragement have been instrumental in shaping the direction of our work.
+
+We would also like to thank the Master of Science in Applied Computer Science program at Fairleigh Dickinson University, Vancouver, Canada, for providing the necessary resources and tools that enabled us to carry out this research.
+
+Finally, we are grateful to our team members—Zhengli Xu, Xinyu Chen, Yingyan Du, Youran Xu, and Ling Li—for their hard work and collaboration, as well as our families and friends for their constant support and encouragement.
+
+
+%\bibliographystyle{plain}
+\bibliographystyle{unsrt}
+\bibliography{references1}
+
+
+\end{document}
