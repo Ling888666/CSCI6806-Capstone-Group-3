@@ -25,11 +25,15 @@ features = [
 ]
 target = 'Defective' # We need to define how the defective label is assigned based on the dataset
 
+
+#clean the data cells for the non-numeric value.
 def laundry_func(x):
     import math
     try:
+        # return -1 if the value is not a float or int.
         return -1 if (math.isnan(float(str(x)))) else x
     except:
+        # return -1 if convertion failed
         return -1
 data[features] = data[features].applymap(laundry_func)
 
