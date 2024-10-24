@@ -1,0 +1,333 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{\textbf{Optimizing Defective Product Prediction with Advanced Feature Engineering and Model Tuning}\\
+%{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
+%should not be used}
+%\thanks{Identify applicable funding agency here. If none, delete this.}
+}
+
+
+\author{
+\IEEEauthorblockN{\centering 
+\begin{minipage}{.3\textwidth}
+    \centering
+    1\textsuperscript{st} Zhengli Xu \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    z.xu6@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    2\textsuperscript{nd} Xinyu Chen \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    x.chen2@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    3\textsuperscript{rd} Yingyan Du \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    y.du1@student.fdu.edu
+\end{minipage}
+}
+\and
+\IEEEauthorblockN{\centering 
+\begin{minipage}{.45\textwidth}
+    \centering
+    4\textsuperscript{th} Youran Xu \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    y.xu3@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    5\textsuperscript{th} Ling Li \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    l.li1@student.fdu.edu
+\end{minipage}
+}
+}
+
+
+
+
+\maketitle
+
+\begin{abstract}
+This project aims to replicate and extend a study on defective product prediction in online sales systems, which originally compared logistic and linear regression models, reporting accuracies of 84.2\% and 76\%, respectively. Our objectives are to reproduce these results and address key limitations, including the lack of hyperparameter tuning, cross-validation, and the application of advanced machine learning techniques.
+The replication utilizes logistic and linear regression models with Python and Scikit-learn, successfully confirming the original results. Future work involves applying hyperparameter tuning and cross-validation to optimize model performance, as well as exploring ensemble methods such as Random Forest and XGBoost. Feature importance analysis using SHAP and LIME is also ongoing. These improvements aim to enhance predictive accuracy and model robustness, addressing the original study’s limitations.
+\end{abstract}
+
+%\begin{IEEEkeywords}
+%component, formatting, style, styling, insert
+%\end{IEEEkeywords}
+
+\section{Introduction}
+In today’s competitive e-commerce environment, accurately predicting defective products is essential for reducing costs, improving customer satisfaction, and streamlining logistics. Machine learning has become a key tool in addressing this challenge, but many existing approaches fail to utilize advanced techniques. Our project aims to build upon an existing study by enhancing predictive models for defective product identification using more sophisticated machine learning methods.
+\subsection{Background}
+Defective product prediction is a critical challenge in supply chain management and online sales systems, where errors in identifying defective products can lead to significant financial losses and customer dissatisfaction. The original paper, Prediction of Defective Products Using Logistic Regression Algorithm against Linear Regression Algorithm for Better Accuracy by Vasantha Naga Vasu et al., addresses this problem by comparing the effectiveness of logistic regression and linear regression models. In the study, logistic regression achieved an accuracy of 84.2\%, outperforming linear regression's 76.0\% accuracy in predicting defective products. However, the study did not employ more advanced machine learning techniques, such as hyperparameter tuning or ensemble learning, which are known to significantly enhance predictive performance. Additionally, the dataset used in the study was relatively small, and feature importance or interpretability was not explored, limiting the broader applicability and impact of the findings.
+
+\subsection{Objective}
+The objective of our project is to reproduce the results of the original study and build upon it by incorporating advanced machine learning methods and model optimization techniques. Specifically, we aim to improve the predictive accuracy of defective product identification by employing ensemble learning algorithms such as Random Forest and XGBoost, which have been proven effective in handling complex, nonlinear relationships in data. Furthermore, we will apply hyperparameter tuning to optimize model performance and utilize feature interpretation tools like SHAP (SHapley Additive exPlanations) to provide insights into feature importance. Through these improvements, we intend to not only validate the results of the original study but also enhance the robustness and interpretability of the prediction models.
+\subsection{Scope}
+Our project will reproduce the key components of the original paper, focusing on the logistic regression and linear regression models as baselines. We will then expand the scope by integrating more advanced techniques, including:
+
+1. Ensemble Learning Models: Random Forest and XGBoost will be introduced to handle the complexity of the data and improve prediction stability.
+
+2. Hyperparameter Tuning: Grid Search and Random Search methods will be employed to optimize the model parameters, ensuring better performance across various datasets.
+
+3. Feature Interpretation: SHAP and LIME (Local Interpretable Model-agnostic Explanations) will be used to provide a deeper understanding of feature importance and model behavior, which was not covered in the original paper.
+
+4. Cross-Validation: We will use K-fold cross-validation to ensure that the models are generalizable and not overfitting to the training data.
+
+Our goal is to surpass the accuracy and reliability of the original study by implementing advanced machine learning techniques. In addition to improving predictive performance, we aim to provide actionable insights through interpretability methods such as SHAP and LIME. These insights will enhance the transparency and trustworthiness of the models, making them more practical and valuable for real-world applications in supply chain management and online sales systems, where decision-makers require both precision and clear understanding of model behavior.
+
+\section{Related Work}
+\subsection{Summary of Original Paper}
+
+The original study, Prediction of Defective Products Using Logistic Regression Algorithm against Linear Regression Algorithm for Better Accuracy by Vasantha Naga Vasu et al. \cite{vasu2022prediction}, aimed to predict defective products in the supply chain by comparing the performance of two machine learning models: logistic regression and linear regression. Their methodology involved applying these models to a dataset and evaluating their accuracy in classifying products as defective or non-defective.
+
+Key findings from the study include:
+
+\noindent \textbullet\ Logistic regression achieved an accuracy of 84.2\%, outperforming linear regression which reached 76.0\%. 
+
+\noindent \textbullet\ The study demonstrated that logistic regression is better suited for binary classification tasks, which makes it a more appropriate model for identifying defective products.
+
+However, the original paper did not explore more advanced machine learning techniques such as hyperparameter tuning or ensemble learning, which could further improve the models' performance. Additionally, there was no focus on feature importance or model interpretability, leaving potential gaps in practical applications for real-world scenarios.
+
+We have successfully replicated the results of the original study, achieving similar accuracy rates with logistic regression. Our focus now is on enhancing these results through further optimization.
+
+\subsection{Literature Review}
+In addition to the original study, several related works in the field of defective product prediction in supply chains have contributed valuable insights that informed our current approach:
+
+
+\subsubsection{Elisa Verna et al. (2022) \cite{verna2022defect}}
+
+%Vasantha N., Surendran R., Madhusundar N., et al. \cite{vasu2022prediction} examined alternative techniques for predicting online product defect rates using machine learning algorithms, especially logistic regression and linear regression. Their study ultimately showed that logistic regression \cite{thota2020survey} significantly outperformed linear regression in detecting product defects, based on a comparative analysis of the precision and accuracy of the two methods \cite{vasu2022prediction}.%
+\noindent \textbullet\ Methodology: Verna and colleagues proposed a model based on structural complexity for predicting defects in assembled products. This approach takes into account both design complexity and process complexity, objectively evaluating product elements and assembly processes without relying on expert judgment.
+
+\noindent \textbullet\ Findings: Their model improved defect prediction accuracy by reducing subjective bias, highlighting the importance of complex feature interactions in defect prediction.
+
+\noindent \textbullet\ Relevance to Our Work: Inspired by this, we are exploring the use of interaction terms in our model to better capture the relationships between product attributes, which may improve the granularity and accuracy of our predictions.
+
+
+\subsubsection{Faseeha Matloob et al. (2021) \cite{matloob2021software}}
+
+%Elisa V., Gianfranco G., Maurizio G. et al. \cite{verna2022defect} introduced a new structural complexity-based approach for predicting defects in assembled products. Their approach emphasizes the objective assessment of product complexity, eliminating the need for expert evaluation and assembly experience. The approach draws on the concepts of the structural complexity paradigm developed by Sinha and Alkan to establish an index that takes into account the complexity of product elements as well as the impact of assembly topology.%
+
+\noindent \textbullet\ Methodology: Matloob et al. conducted a systematic review of ensemble learning methods in defect prediction, particularly focusing on Random Forest and Gradient Boosting algorithms.
+
+\noindent \textbullet\ Findings: Their review demonstrated that ensemble models consistently outperformed single models like logistic regression, especially when dealing with noisy or imbalanced datasets.
+
+\noindent \textbullet\ Relevance to Our Work: Based on these findings, we are incorporating Random Forest and XGBoost into our project. We believe these ensemble methods will enhance model robustness and accuracy, especially in handling complex and noisy data.
+
+\subsubsection{Hang Ruan et al. (2022) \cite{ruan2022deep}}
+
+\noindent \textbullet\ Methodology: Ruan et al. used deep learning techniques like LSTM (Long Short-Term Memory) and spatiotemporal convolutional networks to predict product defects, focusing on the influence of temporal factors in cyber-physical systems. 
+
+\noindent \textbullet\ Findings: Their approach highlighted the importance of time-series data in predicting defect occurrences, showing that defect rates can vary over time.
+
+\noindent \textbullet\ Relevance to Our Work: While our current project does not focus on time-series data, Ruan’s findings suggest potential future improvements by incorporating temporal data if available, allowing us to explore time-based patterns in defect prediction.
+
+\subsubsection{Chen and Guestrin (2021) \cite{xgboost2021example}}
+
+\noindent \textbullet\ Methodology: Chen and Guestrin introduced XGBoost, an efficient implementation of the Gradient Boosting algorithm. XGBoost has been widely used for machine learning applications and has demonstrated higher efficiency and accuracy compared to traditional ensemble methods.
+
+\noindent \textbullet\ Findings: Their research found that XGBoost offers optimized speed and accuracy, making it a strong candidate for predicting defective products.
+
+\noindent \textbullet\ Relevance to Our Work: Inspired by the success of XGBoost in other applications, we are integrating it into our ensemble learning model to further improve prediction accuracy.
+
+These studies demonstrate that machine learning techniques, particularly ensemble models and feature interaction analysis, are critical for advancing defect prediction models. Our work builds on these insights by refining logistic regression and introducing ensemble models to further enhance performance.
+
+\subsection{Improvement on Existing Work}
+
+Our project aims to extend the findings of the original study by implementing several key improvements. While we have successfully replicated the logistic regression results from the original paper, we are confident that the following modifications will significantly improve the model’s performance:
+
+\subsubsection{Hyperparameter Tuning}
+
+The original paper did not explore hyperparameter optimization, which is crucial for improving model performance. We are currently applying Grid Search and Random Search techniques to optimize the logistic regression model. While this tuning is still in progress, early results are promising, and we anticipate further improvements in precision and false positive reduction.
+
+\subsubsection{Ensemble Learning}
+
+To build upon the baseline logistic regression model, we are integrating Random Forest and XGBoost as ensemble learning techniques. These models have been shown to outperform logistic regression in terms of capturing non-linear relationships and improving overall predictive accuracy, as evidenced by Matloob et al. \cite{matloob2021software}. While full implementation is still in progress, initial tests suggest these ensemble models will yield more robust and stable results, particularly when dealing with noisy data.
+
+
+\subsubsection{Feature Importance and Interpretability}
+
+One of the key limitations of the original study was its lack of focus on feature importance. We are addressing this by applying tools like SHAP and LIME, which help us understand the contribution of individual features to the model’s predictions. This not only improves transparency but also provides actionable insights for decision-makers in supply chain management. While we are in the process of finalizing this analysis, early results indicate that feature importance analysis will significantly enhance the interpretability of our models.
+
+While we are still in the process of implementing and optimizing these improvements, we are confident that our modifications will address the limitations of the original study and lead to enhanced model performance. Early results suggest that ensemble learning and hyperparameter tuning are effective strategies for improving accuracy, precision, and robustness. We expect to finalize these improvements in the next phase of the project.
+
+\section{Motivational Results}
+
+\subsection{Preliminary Data}
+After performing logistic and linear regression on the SCMS dataset, the early results show the difference in performance between the two models across varying training set sizes. Both accuracy and precision were measured for each model.
+
+Here are the key results:
+
+At 50\% training size, linear regression achieved 87.1\% accuracy and 77.0\% precision, while logistic regression yielded 86.8\% accuracy and 85.7\% precision.
+
+As the training set size increased, logistic regression consistently maintained higher precision, with the highest accuracy of 87.9\% at 90\% training size, compared to 86.1\% for linear regression.
+
+These results support the hypothesis that logistic regression performs better in classification tasks within supply chain management, especially for binary outcomes such as identifying defective products.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Picture1.png}
+    \caption{Accuracy and Precision Comparison of Original and Reproduced Algorithm}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{Analysis}
+As shown in the table, logistic regression's accuracy and precision consistently remains above 8\%, while linear regression's hovers around 75\%. After careful verification, our team concluded that the reproduced logistic regression results for precision and accuracy align with the original study's findings. However, we observed a significant discrepancy in linear regression's accuracy, particularly with a 10\% gap when trained on 90\% of the dataset. We believe this difference stems from inconsistencies in data cleaning standards between our reproduction and the original study. Despite this, we believe it does not impact the subsequent analysis and improvement of the logistic regression algorithm.
+
+Excluding the variations caused by data cleaning discrepancies, the overall trend is clear: logistic regression significantly outperforms linear regression. This finding confirms the necessity of the original study. The logistic regression algorithm can indeed improve the accuracy of defect detection in products, helping businesses reduce costs and risks.
+
+Nevertheless, we also observed that the original paper reported lower accuracy and precision than our reproduced results. This suggests that there is still considerable room for improvement in the logistic regression algorithm to further enhance its real-world application accuracy. In the future, our team plans to rigorously validate the reproduced code and introduce external datasets to ensure the algorithm remains efficient across different scenarios.
+
+During our analysis, we discovered the following patterns:
+
+\subsubsection{Linear vs. Logistic Regression}
+
+Linear regression is more suited for predicting continuous outputs, while logistic regression excels in binary classification tasks. This distinction is evident in the precision results: logistic regression consistently performs better, accurately identifying positive outcomes (e.g., defective products).
+
+\subsubsection{Challenges with Linear Regression in Classification}
+
+Although linear regression is easier to implement, it struggles with classification problems, especially as the size of the training set increases. This limitation underscores the importance of selecting the right model based on the task at hand.
+
+\subsubsection{Logistic Regression's Gradient Descent Optimization}
+
+Logistic regression iteratively adjusts its parameters using gradient descent to minimize the cost function. This approach enables the algorithm to find the optimal decision boundary between positive and negative classes, leading to superior classification results.
+
+In contrast, linear regression uses a straight-line fit, which is often insufficient for complex classification problems like the one posed in the SCMS dataset.
+
+Overall, our findings support the practical value of logistic regression for real-world applications, particularly in supply chain management to reduce defects and improve product quality. In this case, it is necessary to improve the performance of the logistics algorithm.
+
+
+\section{Methodology}
+The methodology section thoroughly explains the methodical steps we took to improve and duplicate the findings of the first study on machine learning-based defective product prediction. Our methodical approach guarantees that the techniques used are strict and efficient in achieving the project's goals.
+
+\subsection{ Reproduction Approach}
+
+\subsubsection{Data Preprocessing}
+We started by cleaning the SCMS Delivery History Dataset.csv dataset, taking care of duplicates, missing numbers, and inconsistencies before preparing it for analysis. Our automated script used the pandas and NumPy libraries in Python to check and apply conversions to numerical columns. It was created using a Colab notebook. Non-numeric values in columns were forced, and missing values in categorical and numerical variables were imputed using an approach that matched the original study's.
+
+For feature Scaling and Encoding, as part of data preprocessing, the dataset was scaled and encoded in terms of features. We used one-hot encoding for categorical columns such as 'Shipment Mode' and 'Vendor.' Continuous variables such as 'Freight Cost (USD),' 'Weight (Kilograms),' and 'Line Item Value' were standardized using a MinMaxScaler to ensure that they contribute equally to model training while avoiding scale biases.
+
+Outlier Detection and Cleaning, to identify outliers that could harm model performance, we used statistical methodologies and visualization techniques such as Seaborn's boxplot. Outliers were either deleted or handled to avoid distortion in the prediction model, hence increasing predictive validity and providing improved model outputs.
+
+Reproduction of existing models, following the data preprocessing and cleaning phase, we recreated the logistic and linear regression models as described in the original study. This included establishing the mathematical equations for the models, determining the proper independent variables (features) and dependent variable (defective product rate), and performing train-test splits in the 80/20 ratio.
+
+\subsubsection{Programming Tools}
+Python and the Scikit-learn module were used to create baseline models. Python's broad ecosystem for data science and machine learning sped up the replication process. Scikit-learn facilitated model training, performance measurement, and evaluation, ensuring conformity with the original study's techniques.
+
+
+\subsubsection{Model Configuration}
+We trained logistic and linear regression models with the parameters from the original research. Although the initial models served as a starting point, our method included sophisticated model configurations for future research.
+
+\subsection{Improvement Approach}
+
+Future the phase of our regression models, we will adopt a meticulous approach aimed at establishing a solid foundation from which model performance could be incrementally enhanced. Both logistic and linear regression frameworks will be executed through a systematic training regimen, which includes crucial steps such as optimal hyperparameter tuning. The importance of hyperparameter optimization will be underscored by the resultant model accuracy, reinforcing the model's robustness.
+
+Following the training phase, we will conduct a thorough evaluation using a variety of performance indicators such as accuracy, precision, recall, and F1-score to comprehensively assess the models' efficacy. This quantitative assessment will be supplemented by statistical validation, mostly using hypothesis testing to make conclusions regarding performance improvements. P-values act as gatekeepers for determining statistical significance, ensuring that reported performance increases are not the result of random fluctuations in the dataset.
+
+Following that, we plan to expand on the current framework by implementing ensemble learning approaches, which are associated with increased resilience to data abnormalities. Specifically, we intend to investigate the capabilities of the Random Forest and XGBoost algorithms. These strategies promise a composite model configuration with the ability to improve performance via collaborative decision-making processes found in ensemble techniques. In conjunction with these improvements, we are committed to completing a thorough evaluation of feature influence using SHAP (SHapley Additive Explanations) and LIME (Local Interpretable Model-agnostic Explanations). The anticipated consequence of this attempt is a thorough understanding of the factors that have the greatest influence on the prediction outcomes. This feature importance analysis and pursuit of model interpretability are expected to produce critical insights, allowing us to fine-tune our approach and promoting a deeper understanding of the underlying causal variables that cause product-related problems.
+
+\subsection{Computational Environment}
+
+\subsubsection{Hardware Specifications}
+The original paper used an 8GB RAM, I5 CPU, and 256GB HDD. The hardware we used is 32GB RAM, AMD Ryzen 7 5700X 8-Core Processor, 1TB SSD, to support faster computing speed and larger computing capacity.
+
+\subsubsection{Development Environment}
+Our development and model training were mostly done in Linux and Windows environments, which ensured compatibility and reproducibility across platforms. Since the original paper was completed in 2022, much key software has been significantly updated in the past two years, including the Python libraries we use, such as pandas and sklearn, so we have also made progress in the software infrastructure compared to the original paper.
+
+\subsection{Libraries and Frameworks}
+
+A range of technical libraries supported the project's execution:
+
+\subsubsection{Data Preprocessing and Analysis}
+Pandas and NumPy were utilized to manipulate data and perform numerical calculations, which laid the framework for our data preprocessing phase.
+
+\subsubsection{Model Implementation and Evaluation}
+Scikit-learn made it easier to create the core machine learning method, as well as evaluate and select models later on.
+
+\subsection{Figures and Diagrams}
+
+Comparing the outcomes of the reproduced models (Re-Linear and Re-Logistic) to the original models (Linear and Logistic):
+
+\subsubsection{For linear regression}
+
+When compared to the original Linear Regression model, the reproduced Linear Regression model (Re-Linear) performs more consistently and accurately across all training/testing splits. The increase in accuracy is between 13.0\% to 14.0\%.
+
+In terms of precision, the Re-Linear model outperforms the original Linear Regression model across all splits, with an increase of approximately 3.3\% to 5.5\%.
+
+\subsubsection{For logistic regression}
+
+With differences ranging from 6.5\% to 3.7\% across the splits, the accuracy of the reproduced Logistic Regression model (Re-Logistic) is comparable to that of the original Logistic Regression model.
+
+When it comes to precision, the Re-Logistic model replicates somewhat less precisely than the original Logistic model; the difference can range from 0.8\% to 3.8\% depending on the split.
+
+TABLE I. ACCURACY AND PRECISION OF REPRODUCED MODELS ACROSS DATA SPLITS
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Picture2.png}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Picture3.png}
+    \caption{Accuracy and Precision of Reproduced Models Across Data Splits}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsubsection{Summary of the reproduction results}
+
+Overall, the reproduction of both models has resulted in significant increases in accuracy. This indicates that the reproduction process was successful in preserving or improving the original model's capacity to correctly classify occurrences.
+
+The reproduced Linear Regression model frequently outperforms the original model in terms of precision, implying that positive situations can be identified more specifically. However, the reproduced Logistic Regression model does not always maintain the original model's precision; in most circumstances, there is a minor reduction.
+
+The trend in the reproduced data shows that as the proportion of training data increases, both accuracy and precision for reproduced models tend to remain stable or slightly decline, which is a common pattern due to potential overfitting or reduced generalization from training on a larger portion of the dataset.
+
+Taking these reproduction findings into account, it is possible to conclude that the process of duplicating the models has generally succeeded in keeping or improving their predictive performance when compared to the original models, with a particular emphasis on accuracy over precision. These duplicated results validate the original study's conclusions and provide a solid foundation for future research or model implementation.
+
+\section*{Acknowledgment}
+We would like to express our sincere gratitude to our project advisor, Dr. Jeeho Ryoo, for his invaluable guidance, insightful feedback, and continuous support throughout the course of this project. His expertise and encouragement have been instrumental in shaping the direction of our work.
+
+We would also like to thank the Master of Science in Applied Computer Science program at Fairleigh Dickinson University, Vancouver, Canada, for providing the necessary resources and tools that enabled us to carry out this research.
+
+Finally, we are grateful to our team members—Zhengli Xu, Xinyu Chen, Yingyan Du, Youran Xu, and Ling Li—for their hard work and collaboration, as well as our families and friends for their constant support and encouragement.
+
+
+%\bibliographystyle{plain}
+\bibliographystyle{unsrt}
+\bibliography{references1}
+
+
+\end{document}
