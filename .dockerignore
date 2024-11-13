@@ -14,5 +14,3 @@ _git/
 /data/*
 #Container
 _docker_host/
-#Paper
-/paper/*

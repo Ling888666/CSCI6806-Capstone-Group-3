@@ -1,4 +1,28 @@
 {
     "do_laundry":false,
-    "legacy_only":false
+    "legacy_only":false,
+    "generate_target":false,
+    "num_shots":1,
+    "raw_csv_path":"SCMS_Delivery_History_Dataset.csv",
+    "used_ratio":0.4,
+    "thresh":0.3,
+    "test_size":0.1,
+    "gen_state":101,
+    "gen_weight": [113, 112],
+    "random_state":42,
+    "rf_param_grid": {
+        "n_estimators": [100, 200],
+        "max_depth": [10, 20]
+        },
+    "xgb_param_grid": {
+        "n_estimators": [100, 200],
+        "max_depth": [3, 5],
+        "learning_rate": [0.01, 0.1]
+        },
+    "n_iter":10,
+    "rf_n_iter":4,
+    "xgb_n_iter":8,
+    "cv":3,
+    "n_jobs":-1,
+    "voting":"soft"
 }

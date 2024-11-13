@@ -73,7 +73,7 @@ def datetime_to_int_timestamp_ms(dt):
         # raise TypeError("Provided argument is not a datetime object")
         return None
 
-def split_columns(df, splitter='-', type_suffix=" Type", id_suffix=" ID"):
+def split_columns(df, easy=False, splitter='-', type_suffix=" Type", id_suffix=" ID"):
     if not isinstance(df, pd.DataFrame):
         raise ValueError("The provided argument is not a pandas DataFrame")
     
@@ -81,7 +81,7 @@ def split_columns(df, splitter='-', type_suffix=" Type", id_suffix=" ID"):
 
     for column in df.columns:
 
-        if df[column].apply(lambda x: isinstance(x, str) and splitter in x and x.split(splitter, 1)[1].isdigit()).all():
+        if df[column].apply(lambda x: isinstance(x, str) and splitter in x and (easy or x.split(splitter, 1)[1].isdigit())).all():
 
             split_df = df[column].str.split(splitter, expand=True)
             split_df.columns = [column + type_suffix, column + id_suffix]
@@ -222,13 +222,13 @@ def update_col_meta(col_id,col_meta,cursor,conn):
     #     word_count INTEGER DEFAULT 0,
     #     dict_count INTEGER DEFAULT 0
     # )
-    null_count= col_meta['null_count']
-    value_count= col_meta['value_count']
-    value_min= col_meta['value_min']
-    value_max= col_meta['value_max']
-    ref_count= col_meta['ref_count']
-    word_count= col_meta['word_count']
-    dict_count= col_meta['dict_count']
+    null_count= int(col_meta['null_count'])
+    value_count= int(col_meta['value_count'])
+    value_min= float(col_meta['value_min'])
+    value_max= float(col_meta['value_max'])
+    ref_count= int(col_meta['ref_count'])
+    word_count= int(col_meta['word_count'])
+    dict_count= int(col_meta['dict_count'])
     cursor.execute(f'''UPDATE column_meta SET null_count=?, value_count=?,
         value_min=?, value_max=?, ref_count=?, word_count=?, dict_count=? WHERE id=?''',
         (null_count,value_count,value_min,value_max,ref_count,word_count,dict_count,col_id))
@@ -239,7 +239,7 @@ def df_norm(d):
     return d_norm
 
 def df_uint_scale(d):
-    d_uint=df_norm(d) * 0xFFFFFF
+    d_uint=df_norm(d) * 0xFFFFFFFF
     d_uint.round(0)
     return d_uint
 
@@ -262,55 +262,88 @@ def hash_combine(lhs,rhs):
     # rhs = rhs.int() if isinstance(rhs,pd.Series) else rhs
     # print(lhs)
     # print(rhs)
-    # lhs ^= rhs + 0x9e3779b9 + (lhs << 6) + (lhs >> 2)
-    # lhs &= 0xFFFFFF
-    lhs = simple_hash(lhs) + simple_hash(rhs)
-    lhs &= 0xFFFFFF
+    lhs ^= rhs + 0x9e3779b9 + (lhs << 6) + (lhs >> 2)
+    lhs &= 0xFFFFFFFF
+    # # lhs = lhs + simple_hash(rhs)
+    # lhs = simple_hash(lhs) + rhs
+    # lhs &= 0xFFFFFFFF
     return lhs
 
-def combine_row(row,col_names):
+def add_combine(x,y):
+    return x + y
+
+# debug_cnt =0
+
+def combine_row_hash(row,col_names,thresh):
+    global debug_cnt
     slist = [row[x].astype(int) for x in col_names]
+    # out = reduce(hash_combine, slist[1:], simple_hash(slist[0]))
     out = reduce(hash_combine, slist[1:], slist[0])
+    # debug_cnt+=1
+    # if (debug_cnt<100):
+    #     # print(f"out={out},len={len(col_names)},blocker={blocker}")
+    #     print(f"out={out},frac={out/0xFFFFFFFF}")
+    # return 1 if (out/0xFFFFFFFF)<=thresh else 0
     return out
 
-
+def combine_row_add(row,col_names,thresh):
+    global debug_cnt
+    slist = [row[x].astype(int)/0xFFFFFFFF for x in col_names]
+    out = reduce(add_combine, slist[1:], slist[0])
+    # debug_cnt+=1
+    # if (debug_cnt<100):
+    #     print(f"out={out}")
+    return out
 
 class SqlLiteDataFrame:
-    def __init__(self, csv_input, column_names=None, id_column=None, name_column=None):
-        if isinstance(csv_input, str):
-            self.csv_path = csv_input
-        else:
-            self.csv_path = "input.csv"
-        self.db_path = os.path.splitext(self.csv_path)[0] + '.sqlite'
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
-        self.id_column = id_column or 'ID'
-        self.name_column = name_column
-        self.column_data = {}  # format：column_name -> (col_id, has_datetime, ...)
-        
-        self.conn = sqlite3.connect(self.db_path)
-        self.cursor = self.conn.cursor()
-        
-        if isinstance(csv_input, pd.DataFrame):
-            self.df = csv_input
-        else:
-            if column_names:
-                self.df = pd.read_csv(csv_input, names=column_names)
+    def __init__(self, do_laundry, csv_input, column_names=None, id_column=None, name_column=None, easy_split=True):
+        self.do_laundry = do_laundry
+        self.conn = None
+        if do_laundry:
+            if isinstance(csv_input, str):
+                self.csv_path = csv_input
             else:
-                self.df = pd.read_csv(csv_input)
+                self.csv_path = "./data/input.csv"
+            self.db_path = os.path.splitext(self.csv_path)[0] + '.sqlite'
+            if os.path.exists(self.db_path):
+                os.remove(self.db_path)
+            self.id_column = id_column or 'ID'
+            self.name_column = name_column
+            self.column_data = {}  # format：column_name -> (col_id, has_datetime, ...)
+            
+            self.conn = sqlite3.connect(self.db_path)
+            self.cursor = self.conn.cursor()
+            
+            if isinstance(csv_input, pd.DataFrame):
+                self.df = csv_input
+            else:
+                if column_names:
+                    self.df = pd.read_csv(csv_input, names=column_names)
+                else:
+                    self.df = pd.read_csv(csv_input)
 
+            self.target_name = None
+            self.easy_split = easy_split
+            self.df = split_columns(self.df,easy_split)
 
-        self.target_name = None
-        self.df = split_columns(self.df)
+            # print(self.df)
+            print(self.df.head())
 
-        # print(self.df)
-        print(self.df.head())
+            self.out_df = pd.DataFrame(self.df[self.id_column])
+            
+            self.initialize_database()
+        else:
+            self.id_column = id_column or 'ID'
+            self.name_column = name_column
+            self.target_name = None
+            self.easy_split = easy_split
+            if isinstance(csv_input, str):
+                self.csv_path = csv_input
+                self.out_df = pd.read_csv(csv_input)
+                print(self.out_df.head())
+            else:
+                raise Exception("Logic Branch Not Implemented!")
 
-        self.out_df = pd.DataFrame(self.df[self.id_column])
-        
-        self.initialize_database()
-        
-    
     def initialize_database(self):
 
         self.cursor.execute('''
@@ -377,7 +410,6 @@ class SqlLiteDataFrame:
             has_null = self.out_df[col_name_null].notna().any()
             has_reference = self.out_df[col_name_ref].notna().any()
 
-            # 记录每列的信息
             col_meta = {
                 'col_id': col_id,
                 'name': col_name,
@@ -468,20 +500,52 @@ class SqlLiteDataFrame:
         # Commit the changes
         self.conn.commit()
 
-    def generate_target(self,target_name="IsDefective", used_ratio=0.5, thresh=0.5):
-        tar_src = self.output_int.sample(frac=used_ratio,axis=1)
-        # self.out_df[target_name] = tar_src.apply(simple_hash,axis=1)
-        tar_columns = tar_src.columns.tolist()
-        target = tar_src.apply(combine_row,axis=1,args=(tar_columns,))
-        # slist = [tar_src[x].astype(str) for x in tar_columns]
+    def generate_target(self,target_name="IsDefective", used_ratio=0.5, thresh=0.5, gen_state=None,gen_weight=None, gen_source_columns = None):
+
+        # use_hash = True
+        target = None
+        tmp=[]
+        tmp_weight = None
+        if gen_weight is None:
+            tmp_weight = [113, 112]
+        else:
+            tmp_weight = gen_weight
+
+        tar_src = None
+        if (gen_source_columns is None):
+            # tar_src = self.output_int.sample(frac=used_ratio,axis=1)
+            tar_src = self.output_int.sample(frac=used_ratio,axis=1,random_state=gen_state)
+        else:
+            tar_src = self.output_int[gen_source_columns]
+        src_columns = tar_src.columns.tolist()
+        self.src_columns = src_columns
+        print(self.src_columns)
+        for x in range(2):
+            tmp_tar = None
+            match x:
+                case 0:
+                    tmp_tar = tar_src.apply(combine_row_hash,axis=1,args=(src_columns,thresh))
+                    tmp_tar = tmp_tar.apply(lambda x: 1 if (x/0xFFFFFFFF)<=thresh else 0)
+                case 1:
+                    tmp_tar = tar_src.apply(combine_row_add,axis=1,args=(src_columns,thresh))
+                    compare_val = tmp_tar.mean()
+                    tmp_tar = tmp_tar.apply(lambda x: 1 if x<=compare_val else 0)
+                case _:
+                    continue
+            tmp.append(tmp_tar)
+        
+        target = (tmp_weight[0]*tmp[0]) + (tmp_weight[1]*tmp[1])
+        compare_val = target.mean()
+        target = target.apply(lambda x: 1 if x<=compare_val else 0)
+
         self.target_name = target_name
-        # target = reduce(hash_combine, slist[1:], slist[0])
-        target = target.apply(lambda x: 1 if round(x/0xFFFFFF)<=thresh else 0)
         self.target = target
         print(self.target.head())
+        print(f"Target Mean = {target.mean()}")
+        print(self.target.tail())
 
     def to_csv(self):
-        target_path = os.path.splitext(self.csv_path)[0] + '.out.csv'
+        target_path = (os.path.splitext(self.csv_path)[0] + '.out.csv') if self.do_laundry else self.csv_path
         out = self.output
         if (self.target_name is not None):
             out[self.target_name] = self.target
@@ -489,7 +553,7 @@ class SqlLiteDataFrame:
         out.to_csv(target_path,index=False)
 
     def to_int_csv(self):
-        target_path = os.path.splitext(self.csv_path)[0] + '.int.csv'
+        target_path = (os.path.splitext(self.csv_path)[0] + '.int.csv') if self.do_laundry else self.csv_path
         out = self.output_int
         if (self.target_name is not None):
             out[self.target_name] = self.target
@@ -497,7 +561,7 @@ class SqlLiteDataFrame:
         out.to_csv(target_path,index=False)
 
     def to_normalized_csv(self):
-        target_path = os.path.splitext(self.csv_path)[0] + '.normalized.csv'
+        target_path = (os.path.splitext(self.csv_path)[0] + '.normalized.csv') if self.do_laundry else self.csv_path
         out = self.output_normalized
         if (self.target_name is not None):
             out[self.target_name] = self.target
@@ -519,7 +583,8 @@ class SqlLiteDataFrame:
         return df_norm(self.output)
                 
     def __del__(self):
-        self.conn.close()
+        if self.conn is not None:
+            self.conn.close()
 
 def test():
     a_df = pd.DataFrame({
@@ -528,7 +593,7 @@ def test():
         '_Date_': ["10/20/2000", "10-21-2000","22/Oct/2000","23-Oct-2000","24 Oct 2000"],
         '_Ref_': ["(ID#:4)", "(ID#:5)","3","4","5"]
         })
-    sqlLiteDf = SqlLiteDataFrame(a_df)
+    sqlLiteDf = SqlLiteDataFrame(True,a_df)
     sqlLiteDf.generate_target(used_ratio=1.0,thresh=0.3)
     sqlLiteDf.to_csv()
     sqlLiteDf.to_int_csv()
