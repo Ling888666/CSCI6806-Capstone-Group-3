@@ -1,0 +1,476 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{\textbf{Optimizing Defective Product Prediction with Advanced Feature Engineering and Model Tuning}\\
+%{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
+%should not be used}
+%\thanks{Identify applicable funding agency here. If none, delete this.}
+}
+
+
+\author{
+\IEEEauthorblockN{\centering 
+\begin{minipage}{.3\textwidth}
+    \centering
+    1\textsuperscript{st} Zhengli Xu \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    z.xu6@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    2\textsuperscript{nd} Xinyu Chen \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    x.chen2@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    3\textsuperscript{rd} Yingyan Du \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    y.du1@student.fdu.edu
+\end{minipage}
+}
+\and
+\IEEEauthorblockN{\centering 
+\begin{minipage}{.45\textwidth}
+    \centering
+    4\textsuperscript{th} Youran Xu \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    y.xu3@student.fdu.edu
+\end{minipage}
+\hfill
+\begin{minipage}{.3\textwidth}
+    \centering
+    5\textsuperscript{th} Ling Li \\
+    \textit{Master of Science in} \\
+    \textit{Applied Computer Science} \\
+    \textit{Fairleigh Dickinson University} \\
+    Vancouver, Canada \\
+    l.li1@student.fdu.edu
+\end{minipage}
+}
+}
+
+
+
+
+\maketitle
+
+\begin{abstract}
+This project uses learning methods including random forests and XGBoost to handle nonlinear data relationships. Model performance is optimized through parameter adjustment, interpretability is enhanced through SHAP and LIME, and feature importance is improved. The results show that compared with previous studies, the prediction accuracy of the model in this project for the same data set has improved from 84.20\% to 85.48\%, indicating that this method is more adaptable to the modern supply chain environment. The improved interpretability of the model enhances audience confidence and can promote strategic adjustments in the supply chain. By combining state-of-the-art methods, this project also proposes some improvements in data cleaning to meet the technical and operational needs of defective product prediction in the evolving supply chain industry. The improved results can reduce the defective product rate, optimize inventory management, and reduce operating costs.
+\end{abstract}
+
+%\begin{IEEEkeywords}
+%component, formatting, style, styling, insert
+%\end{IEEEkeywords}
+
+\section{Introduction}
+
+The prediction of the faulty product is an important aspect of the supply chain process, most especially due to the heightened competition presented by electronic commerce platforms. They are important for reducing expenses, increasing customer satisfaction and optimising the business performance. Another related work done by Vasantha Naga Vasu et al. employs the technique of logistic regression and linear regression to analyze this problem. A logistic regression model used in their study was found to give an accuracy of 84.2\% compared to linear regression with accuracy of 76\%. However, due to the following shortcomings the research did not reach its full hit potential Basic statistical analyses were used to generate the results and this decreases the applicability especially in large datasets encountered in real life situations.
+
+In this project, inspired by the work done by Canny, we address the issues that previous work has with improved machine learning methods. For this, ensemble learning methods are included based on randomness character and good performance for noisy and non-linear data relationships such as Random Forests, XGBoosts, etc. Further, to improve the effectiveness of the models on specific datasets, parameter optimization methodologies such as Grid Search and Randomized Search are applied. For enhanced interpretability, a factor that is lacking in many machine learning models, is used and includes tools like SHAP (SHapley Additive exPlanations) and LIME (Local Interpretable Model-agnostic Explanations) which provide the analysis of the contribution of each feature supporting the understanding of how the models come up with their decisions.
+
+The challenges identified in this project are multifaceted:
+
+1) Accuracy and Precision: Logistic regression had better precision compared to linear regression, but the results were still unsatisfactory, due to a large number of defective items which were not classified.
+
+2) Scalability: Popular basic models are not very efficient for high-dimensional data which are generally expected in the supply chain systems.
+
+3) Interpretability: Traditional methods lack the necessary transparency and it becomes hard for stakeholders to understand and trust the forecast.
+
+To overcome these challenges this project proposes a novel solution beginning with the ensemble learning segment of parameter optimization and the last segment on feature interpretability. The approach improves the specificity of the model while guaranteeing that such a model performs well no matter the data set and is easily understandable by the users. As a result of the incorporation of SHAP and LIME, it is possible to get the specifics of the factors that contribute to the predictions, a method by which the supply chain strategies can be adjusted, based on quantitative findings.
+
+The audience of this work comprises such individuals as Supply chain analyst and Inventory manager. These stakeholders can use the predictive insights for purposes of minimizing instances of delivery of substandard products to consumers, rationalization of stock control and decreasing cost. Additionally, the interpretability of the solution earns the trust of decision-makers to prevent such risks in advance.
+
+Thus, by developing the ways of the enhancement of the initial research, the present work provides a sustainable and effective approach to evaluating the existence of defects in products. It is well in harmony with an emerging requirement for reliable, explainable, and fast models in the developing area of supply chain analysis. The improvements developed in this work are meant to offer a robust instrument that fulfils the technological as well as functional requirements in the contemporary context of industries.
+
+\section{Related Work}
+Forecasting of defective products is still a critical issue in supply chain management where it creates strong effects on the minimization of costs, improvement of overall flow processes and customer satisfaction. Researchers in prior work have proposed techniques to mitigate such a problem providing foundation for this work’s improvements in classification results and related model credibility.
+
+\subsection{Foundational Study}
+The study by Vasantha Naga Vasu et al. (2022) \cite{vasu2022prediction} sets the reference for this work since it considers the use of both logistic regression and linear regression to classify the defects. Their finding was that using logistic regression yielded higher accuracy than that of linear regression, 84.2\% compared to 76.0\%. But still, any enhancements like hyperparameters tuning or members of the Ensemble Learning family that should be crucial in dealing with bigger and more complex data-sets were missed in the study. Our work extends their results by addressing such limitations of previous studies by incorporating more sophisticated techniques for machine learning.
+
+\subsection{Ensemble Learning}
+With development in more recent ensemble learning strategies and architectures, they show more robust results for noisy and nonlinear sources. Both Random Forest and XGBoost in particular, improve the stability and accuracy of the prediction by averaging multiple decisions. Faseeha Matloob, et al. (2021) \cite{matloob2021software} conducted this systematic review, with focus on the efficiency of these methods to enhance the performance of models with imbalanced datasets. In this project, we adopted these ensemble techniques, integrating their properties into a voting-based system to deliver defendable and precise forecasts of defects.
+
+Fine-tuning of hyperparameters is crucial if ensembles must produce highly effective learning models. RandomizedSearchCV is used in this project to decide on parameters such as numbers of estimators, depth of trees, and the learning rate. Specifically these optimizations ensure that the models are not only optimal but also the model is tweaked to the specific data type enhancing prediction scores.
+
+\subsection{Architecture and Openness}
+The interactions between the features are another important predictor of the level of accuracy that is achievable. Thus, Elisa Verna et al. (2022) \cite{verna2022defect} shared a model that takes into account structural complexity, implying that relations between the variables should be complex. Based on their consideration, this project applies SHAP and LIME for interpretability to identify the importance of features and feature interactions. These tools help us to establish the critical features that contribute to the development of defective products while simultaneously increasing model interpretability and decision-making based on the results.
+
+\subsection{Time-Series Considerations}
+A brief survey of the current research on the use of temporal patterns for defect prediction is also provided in this section. Hang Ruan et al. (2022) \cite{ruan2022deep} analyzed LSTM networks and spatiotemporal convolutional models for considering time-related characteristics. They also found some patterns related to user preference for certain types of content, which, although this project does not at present incorporate temporal data, they point toward future research avenues for such work. Subsequent versions of this dataset will consider the inclusion of time series features as our dataset is currently designed for such purpose.
+
+\subsection{XGBoost for High Efficient Prediction}
+The work of gradient boosting algorithms has been advanced by Chen and Guestrin (2016) \cite{xgboost2021example} by the introduction of XGBoost. As a result, its computational dimensions are optimized to seamlessly make it ideal for use particularly with high dimensions data sets. XGBoost is a primary part of our predictive model in this project as it provides increased accuracy and quicker training compared to other workarounds.
+
+\subsection{Project Contributions}
+Through the use of ensemble learning, optimal hyperparameters tuning and a more sophisticated interpretability technique, this study seeks to mitigate the shortcomings of prior work while providing a more efficient solution to contemporary supply chain problems. It is important to note that these improvements do not just improve the ability of the models to predict future values of Y but also offer information on what is likely to cause a high number of product defects. This creates a broad view to our model positioning it as a real-life mechanism of cost cutting and efficient process in industrial environments.
+
+
+\section{Motivation}
+
+This section examines the performance of Linear and Logistic Regression models for defective product prediction using the SCMS dataset. Key findings highlight Logistic Regression’s superiority in precision and accuracy for binary classification tasks. Challenges in replication, such as discrepancies in data cleaning and preprocessing, are discussed alongside the models' limitations. These insights motivate the exploration of advanced machine learning techniques to address scalability, improve predictive accuracy, and enhance model robustness in supply chain applications.
+
+\subsection{Preliminary Data and Observations}
+
+To reduce overall supply chain costs, increase customer satisfaction and overall performance, it is imperative to predict defective products within a supply chain. To replicate the initial analysis of Vasantha Naga Vasu et al., we chose the dataset they used and aimed at reconstructing the logistic and the linear regression models for defective product prediction during the first phase of our study. In replication, we employed both models on the SCMS (Supply Chain Management System) dataset and analyzed their performance using different training set sample sizes. This paper specifically chose the SCMS dataset for analysis due to its comprehensiveness, which has features directly related to supply chain management processes.
+
+Our preliminary results revealed notable differences between the two models:
+
+At 50\% training size, Linear Regression achieved an accuracy of 87.1\% and a precision of 77.0\%, whereas Logistic Regression had a slightly lower accuracy of 86.8\% but demonstrated a significantly higher precision of 85.7\%. 
+
+As the training set size increased, Logistic Regression consistently showed higher precision compared to Linear Regression. At 90\% training size, both models performed similarly, with Logistic Regression achieving the highest accuracy of 87.9\% and Linear Regression achieving 86.1\%.
+
+The findings derived from the current study are presented in tabular form in the following table: Table 1.
+
+\begin{table}[htbp]
+\caption{Performance of Linear and Logistic Regression Models at Different Training Set Sizes}
+\end{table}
+\vspace{-2.5em} 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{table 1.jpg}
+\end{figure}
+
+\subsection{Analysis and Key Insights}
+The analysis of the preliminary results shows that although both models are comparable in terms of standard accuracy both the models Logistic Regression is higher in accuracy than Linear Regression in terms of standard precision and that difference increases when the size of the training set increases. Accuracy is important in defective product prediction, and it measures the ratio of actual defective products out of all classifications of defective products. Higher precision in diagnosing disease means fewer wrong results producing less need for intervention and its costs.
+
+\subsubsection{Linear vs. Logistic Regression}
+
+Linear Regression is built primarily for the analysis of continuous variables and its modeling assumes a straight line. If used in classification problems, it offers continuous quantifications that are required to be quantized into class labels and results in sorting out unwanted classes issues inter-alia.
+
+Logistic Regression, however, is a model designed, notably, for binary classification only. Classifying the data relies on a logistic function that mathematically transforms the likelihood of an input data being of a certain class to being between the range of 0 and 1. This probabilistic view makes it possible to come up with a better means of demarcating the classes.
+
+Calibrating our observations with the original binary classification problem of defect identification, the supremacy of Logistic Regression is evident. Its higher precision also means a better ability to accurately identify the bad apples, which is pivotal in the supply chain to ensure that faulty items do not reach customers.
+
+\subsubsection{Challenges with Linear Regression in Classification}
+
+Although Linear Regression is simpler and easier to implement, it presents several challenges when used for classification:
+
+Ineffective Thresholding: The steady values produced by Linear Regression may not fit the class limit very well, and therefore the thresholding is not very consistent.
+
+Sensitivity to Outliers: Linear Regression can be quite affected by outliers, making the decision boundary slightly distorted hence misclassifications can occur.
+
+Assumption Violations: The conditions for use of Linear Regression – such as in terms of linearity and homoscedasticity – may no longer hold in classification problems.
+
+\subsubsection{Logistic Regression's Optimization Process}
+
+Just like all conventional machine learning models, Logistic Regression’s parameters are trained using maximum likelihood estimate and gradient descent optimization or steepest descent to reduce the cost function (e.g., cross entropy loss). It therefore serves to identify the best decision hyperplane that will best distinguish between the classes from features. Thus, the S-shaped logistic function offers a direct probability estimate for class membership, which increases the model’s clarity and accuracy of the classification.
+
+\subsection{Discrepancy analysis and some data cleaning issues}
+
+From this study, we found differences when replicating the steps in the work done by other authors, specifically focused on the Linear Regression analysis. In particular, our Linear Regression model yielded better performance compared to the numbers stated in the original paper with a disparity of around 10 percentage points in the accuracy level when the training data was set to nine-tenths.
+
+We believe these discrepancies stem from differences in data cleaning and preprocessing procedures:
+
+Data Cleaning Standards: Differences in handling missing values, outliers and data transformations can go a long way in influencing the model. For instance, different ways of handling missing values or transformation of categorical variables may result in models trained on rather different sets of data.
+
+Feature Selection: It means that the selection of characteristics that will be built in the model’s construction impacts the learning of the necessary patterns. Discrepancies in threshold feature definitions between our study and the original may be the source of the performance gap.
+
+Despite these discrepancies, the overall trend remains consistent: It can be seen from the results that Logistic Regression is better than Linear Regression here in the perspective of predicting the probability of defective product.
+
+\subsection{Necessity for Model Improvement}
+
+While Logistic Regression demonstrates superior performance over Linear Regression, our results indicate that there is still considerable room for improvement:
+
+Model Accuracy: It revealed that the overall accuracy attained by Logistic Regression was 87.9\%; and considering that, there exists the risk of misclassifying about 12\% of problematic items.
+
+Precision Limitations: While it has a higher accuracy rate than Linear Regression, more work must be done to reduce the number of false positives to alleviate costs of improper defect identification.
+
+Scalability and Generalization: The model’s capacity for extrapolating to new data it has not seen before and its capacity for growing with increasing amounts of data must be improved.
+
+These considerations necessitate further discussions with regard to the application of ensemble methods to enhance predictive performance in addition to hyperparameter optimization.
+
+\subsection{Motivating Factors for Advanced Techniques}
+
+Based on our preliminary findings, the following factors motivate the adoption of advanced models and optimization strategies:
+
+\subsubsection{Complex Data Relationships}
+Data in supply chain are generally high dimensional and may have many interactions between the features compared to past data where basic models may poorly perform.
+
+\subsubsection{Enhanced Predictive Performance}
+Several combined techniques such as Random Forests and eXtreme Gradient Boosting have been used, and it has been found that the proposed methods perform almost optimally in handling complex high-dimensional datasets and captures more complex patterns and hence tends to more accurate and precise.
+
+\subsubsection{Model Robustness}
+The advanced models are less sensitive to overfitting, thereby capable of extending their performance on new data sets, thus real world applications.
+
+\subsubsection{Feature Importance Insights}
+The contributions of features are well explained thus improving the models interpretability using techniques such as SHAP and LIME.
+
+The preliminary findings establish that Logistic Regression is rather suitable for defective product prediction while revealing its drawbacks at the same time. The need to enhance the level of predictability and resolution while considering the possible advantages of implementing some enhanced machine learning methodologies constitutes the fundamental rationale for our work. Thus, to establish a tangible improvement in the predictive system, we seek to incorporate ensemble models along with tuning the parameters and making use of interpretability.
+
+
+\section{Implementation}
+Our implementation increases defective product prediction through the incorporation of modern machine learning algorithms. Beginning with logistic regression as our baseline model, we added Random Forest, XGBoost, and a VotingClassifier to increase the performance and increase the program’s capacity. Additional preprocessing methods included data exploration, hyperparameters optimization utilizing Grid and Randomized Search CV, and feature interpretation with SHAP and LIME. The final model indicated better performance and resistance. The proposed architecture could offer a supply chain solution that is efficient and can scale well.
+
+\subsection{Solution Strategy}
+The main objective of the present study in implementation strategy is to improve the classification models for defective products and serve its purposes with higher accuracy rates, more stability and scalability. Our approach extends the basic logistic regression model by incorporating a wide range of more sophisticated methods from the field of machine learning, ensemble learning, and thorough model assessment. Concretely, we utilize Random Forest and XGBoost as two efficient algorithms applicable to the structured data, and employ a VotingClassifier as an integrated feature. Hyperparameters optimization makes the models properly calibrated and a cycle of the development process means that the relevant models are being steadily improved.
+
+\subsection{Product Description}
+The implemented system is concerned with the ability to identify defective products within the condition of the supply chain. Based on the features we are defining as input; product features, logement features and order features, the system is able to identify and categorize a product as defect or not defect. The conclusions derived herein should help supply chain managers reduce risks, improve inventory control, and increase working effectiveness. This system can be used as a decision support system to make an effort to manage damages before they affect the company’s financial aspects or the customer satisfaction.
+
+\subsection{Software Architecture}
+Our solution follows a modular architecture, with distinct components for data preprocessing, model training, hyperparameter tuning, and model evaluation:
+
+\subsubsection{Data Preprocessing Module}
+Concerned with the process of cleaning, transforming and scaling of data. This module deals with missing values, converts any features with an object data type to a numerical form where necessary, e.g. Weight (Kilograms) from the data type object to that of float, and scales the numerical features so as to make the features consistent in model training.
+
+\subsubsection{Feature Engineering Module}
+This module contains both supervised as well as unsupervised feature creation, deriving new features or an interaction term from prior knowledge. This component plays a crucial role in enhancing the model's accuracy by identifying and capturing intricate relationships within the data, which traditional features might overlook.
+
+\subsubsection{Model Training and Tuning Module}
+Currently holds several algorithms some of which are logistic regression, Random Forest and XGBoost. This module provides hyperparameter tuning like Grid Search and Randomized Search for tuning up parameters of models.
+
+\subsubsection{Ensemble Learning Module}
+Gather models to use with a VotingClassifier that has soft voting enabled to average the results for stability and better performance.
+
+\subsubsection{Evaluation and Validation Module}
+Subsequently tests model accuracy, precision, recall and F1-score and can assure about its ability to perform at unseen data.
+
+\subsection{Algorithms}
+
+Our project utilizes several key algorithms, each chosen for its specific strengths in handling defect prediction challenges: 
+
+\subsubsection{Logistic Regression}
+As is the most basic of all existing models, logistic regression is used as a baseline or standard with which the added value that other models provide is compared. It is more useful in binary classification than in linear inseparability functions for a relation of a data set.
+
+\subsubsection{Random Forest}
+The base learner used in this method of ensemble learning provides a way of constructing many decision trees and then using their averages for better accuracy of the result and also their stability. However, Random Forest is well suited for large datasets with a high number of attributes, and is, if set up correctly, also less prone to overfitting.
+
+\subsubsection{XGBoost}
+XGBoost means the version of gradient boosting that is optimized and constructed gradually, learning from mistakes of previous models in enhancing the accuracy and speed. XGBoost was also identified to be suitable in handling structured data and has been optimized through parameter optimization for better defect prediction.
+ 
+\subsubsection{VotingClassifier}
+Applies an ensemble on Random Forest and XGBoost with the help of soft voting, which means that the classifier averages probabilities output for more balanced and compact estimations. Outperforms a single model and provides better prediction and resilience.
+
+\subsection{Algorithms}
+
+Our project utilizes several key algorithms, each chosen for its specific strengths in handling defect prediction challenges: 
+
+\subsubsection{Logistic Regression}
+As is the most basic of all existing models, logistic regression is used as a baseline or standard with which the added value that other models provide is compared. It is more useful in binary classification than in linear inseparability functions for a relation of a data set.
+
+\subsubsection{Random Forest}
+The base learner used in this method of ensemble learning provides a way of constructing many decision trees and then using their averages for better accuracy of the result and also their stability. However, Random Forest is well suited for large datasets with a high number of attributes, and is, if set up correctly, also less prone to overfitting.
+
+\subsubsection{XGBoost}
+XGBoost means the version of gradient boosting that is optimized and constructed gradually, learning from mistakes of previous models in enhancing the accuracy and speed. XGBoost was also identified to be suitable in handling structured data and has been optimized through parameter optimization for better defect prediction.
+ 
+\subsubsection{VotingClassifier}
+Applies an ensemble on Random Forest and XGBoost with the help of soft voting, which means that the classifier averages probabilities output for more balanced and compact estimations. Outperforms a single model and provides better prediction and resilience.
+
+
+\subsection{Development Process}
+
+Our development process was divided into distinct stages, each contributing incrementally to the refinement and improvement of our predictive model: 
+
+\subsubsection{Data Preprocessing}
+The initial data pre-processing included treatment of missing data, transforming categorical features and normalizing numerical features. This stage also involved the identification of other features which help in work defect prediction including product attributes and log information.
+
+\subsubsection{Baseline Model Reproduction}
+First, to ensure that our results are roughly comparable to the published results, we recreated the logistic regression model that is presented in the paper in order to achieve 84.2\% accuracy. This let us check the original predictions made by the models and gave a starting point to compare the improved experiments.
+ 
+\subsubsection{Feature Engineering and Advanced Model Integration}
+Specially, other features were developed to model relations in the data. Random Forest was then introduced as a primary model, followed by XGBoost where ensemble ideas were employed to enhance the prediction model stability. The preliminary comparison further validated the insights that they improved on the baseline logistic regression in terms of accuracy and precision.
+
+\subsubsection{Hyperparameter Tuning}
+We used Grid Search and Randomized Search for hyper tuning for the best model performance. Random Forest settings such as the number of trees and maximum tree depth were tuned, for the XGBoost model, the learning rate and the maximum depth were chosen. During this tuning process, cross-validation was performed specifically by 5 fold, to ensure that models are not overfitted to the data, and can generalize to unseen data.
+
+\subsubsection{Ensemble Learning}
+Combined the optimized Random Forest \& XGBoost into a VotingClassifier, which followed a soft voting mechanism for increased accuracy \& precision.
+
+\subsubsection{Final Model Testing and Validation}
+Evaluated assessed models based on relevant measures including accuracy, precision, recall as well as the F1 score. As the final phase of analysis, the optimized models were again tested and the results were compared to the baseline. XGBoost and Random Forest outperformed the other models in predicting software defects, and proved the use of ensemble methods for building reliable models. The final determinations for model choice tried to strike that delicate balance between accuracy and interpretability to ensure that the solution put forth was not only good but also easily understandable.
+
+As a result of the comprehensive development process of our project, the defective product prediction has stepped forward from the sample statistic models. This implementation framework successfully improves defective product prediction by integrating advanced algorithms and ensemble learning. The VotingClassifier combining Random Forest and XGBoost presents reliable and accurate estimations regarding important issues in supply chain management. This extensible, flexible system matches the need in the real world in terms of reliability and usability of the results.
+
+
+
+\section{Methodology}
+Our project employs a robust methodology combining advanced hardware, versatile software, and sophisticated machine learning techniques to address the limitations of the original study and achieve superior predictive accuracy. Key components include:
+
+\subsection{Hardware}
+
+While the initial paper used a configuration that included 8GB RAM, an Intel i5 CPU, and a 256GB HDD, this project conducted experiments and model creation on a configuration with 32GB RAM and an AMD Ryzen 7 5700X processor with 8 cores backed by a 1TB SSD drive. The hardware selection for this project was to ensure computational power for tasks such as preprocessing datasets, training machine learning models, and performing hyperparameter tuning.
+
+Specifically, a larger memory capacity can make it simpler to perform tasks such as data preprocessing and model training. Also, a processor with numerous cores could allow for parallel computation and improve complex algorithms' training performance. Lastly, an SSD also allows faster data reading and writing than an HDD.
+
+\subsection{Operating System}
+
+The project was conducted using both Linux and Windows operating systems, which aimed to validate models on different computer configurations to ensure that cross-platform compatibility and repeatability could be verified.
+
+\subsection{Programming Language \& Libraries}
+Python, a computer language frequently used for data analysis and machine learning, was used to construct the project. The following external libraries were utilized in this project:
+
+Pandas: Used for tasks like reading data and creating structured data frames from CSV files. Additionally, it was used to effectively integrate information and transform data types into more suitable formats. 
+
+NumPy: Used to create random states to ensure experiment reproducibility.
+
+Scikit-learn: Used for implementing machine learning models such as Logistic Regression and Random Forest, as well as effective tools for preprocessing data. 
+
+XGBoost: Used to efficiently build gradient boosting methods, which can improve model robustness and predictive accuracy.
+
+
+\subsection{Key Techniques and Tools}
+\begin{flushleft}
+Our project applies key concepts such as data pre-processing, ensemble methods, 
+hyperparameter op\-timisation, and feature importance ranking. 
+
+These tools and methods play a vital role in ensuring the model's accuracy, scalability, 
+and interpretability. Together, they form the foundation of the predictive system.
+\end{flushleft}
+
+\subsubsection{Data Preprocessing}
+For this project, it is necessary to preprocess data before the improvement work. For example, the missing values in the dataset were resolved. Categorical variables were also represented numerically. Numerical variables were standardized using feature scaling. In addition, outliers were also discovered and handled. These operations on the data are crucial to providing more effective data for the subsequent steps, which can make data more suitable for model training and results output. These data preprocessing operations were performed using Python libraries such as Pandas and Scikit-learn, which have been widely proven to be reliable and practical. 
+
+
+\subsubsection{Model Implementation}
+
+In this project, Logistic Regression was used as a baseline model while Random Forest and XGBoost were selected as ensemble learning algorithms. These models were chosen because they can manage complex data relationships and have been proven to be efficient and widely used in machine learning fields.
+
+
+\subsubsection{Hyperparameter Tuning}
+
+As for hyperparameter tuning methods, there are two main types: Grid Search and Randomized Search. The principle of Grid Search is that it can systematically explore all possible combinations of specified parameters to determine the best configuration. The role of Randomized Search is to evaluate a random subset of parameter combinations, thereby achieving a balance between computational cost and performance optimization. These tuning methods were implemented using Scikit-learn, providing a standardized method for model evaluation and optimization.
+
+\subsubsection{Feature Importance Analysis}
+SHAP was also used to evaluate the contribution of each feature to the model prediction. Its working logic is to improve the interpretability of the model by quantifying the impact of each feature. LIME was also used to analyze local predictions and it was crucial for insights into specific instances. These two tools were chosen because they are compatible with Python and can improve the transparency of machine-learning models.
+
+
+\subsection{Novel Contributions}
+
+This project introduced various new methodologies and procedures that improved the original study. These contributions are detailed below.
+
+\subsubsection{Model Combination}
+
+A new ensemble learning method was proposed and used in this project, which is an improvement over the original study. Random Forest and XGBoost models were combined to minimize the bias inherent in individual models and provide more accurate prediction results. This new method laid the foundation for the entire improvement project, which was a crucial new insight.
+
+\subsubsection{Feature Enhancement}
+New interaction terms were created based on domain knowledge to better explain how different variables are connected. This helps the models make more accurate predictions by including these improved relationships.
+
+\subsubsection{Model Interpretability}
+
+SHAP and LIME were systematically applied in this project to reveal key factors in predicting defective products. SHAP and LIME complement each other, focusing on global and local understanding of feature importance, respectively. Specifically, SHAP played an important role in providing a global understanding of feature importance by quantifying the contribution of each variable to the model, and LIME provided detailed insights into individual predictions by generating interpretable local alternative models.
+
+
+\section{Experimentation and Results}
+
+\subsection{Testing Framework}
+
+The testing framework was necessarily well-designed for evaluating and optimizing machine learning models used in this project, including Logistic Regression, Random Forest, and XGBoost.
+
+To ensure robust evaluation, the dataset was split into training and test sets with proportions ranging from 50/50 to 90/10, which allowed the models to be assessed under different data distributions. Also, three-fold cross-validation was applied to improve the reliability of the results and minimize the risk of overfitting.
+
+Hyperparameter tuning was a critical aspect of this project, and both Random Forest and XGBoost were optimized using a Grid Search approach. For Random Forest, the grid included the parameter 'n\_estimators' with values between 100 and 200 while 'max\_depth' ranged from 10 to 20. For XGBoost, the grid explored 'n\_estimators' in the range of 100 to 200, 'max\_depth' between 3 and 5, and 'learning\_rate' set at 0.01 and 0.1. 
+
+The number of iterations was also set appropriately in this project to balance computational efficiency. The tuning process used a random search with up to 10 iterations. Random Forest had four iterations, while XGBoost took eight iterations to fully cover its parameter space. A fixed random seed was applied to all experiments to ensure consistent results.
+
+An ensemble learning technique was introduced to improve model performance. This method combines Random Forest and XGBoost through a soft voting mechanism, which is achieved by combining the predictions of these models using VotingClassifier from Scikit-learn. This approach can reduce the bias of individual models and achieve a more balanced and accurate output.
+
+\subsection{Results and Comparisons}
+
+The accuracy and precision of the baseline model from the original paper and the improved ensemble model were listed and compared. The table 2 below details the accuracy and precision of each model in various train-test splits, ranging from 50/50 to 90/10.
+
+\begin{table}[htbp]
+\caption{Comparison of Original and Ensemble Model Performance}
+\end{table}
+\vspace{-2.5em} 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{table 2.jpg}
+\end{figure}
+
+
+It can be found that the improved ensemble model has a certain degree of improvement in predictive performance in terms of accuracy compared to the model used in the original paper, as shown in the Figure 1 below. The Linear Regression model in the original paper took a relatively low accuracy across all splits. For example, on the 90/10 split, its accuracy was only 76.00\%, significantly lower than the ensemble model’s accuracy of 85.48\%. This limitation highlights that linear regression cannot capture complex patterns in the dataset.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{fig 1.jpg}
+    \caption{Comparison of Original and Ensemble Model Performance}
+    \label{fig:performance-comparison}
+\end{figure}
+
+
+As for the Logistic Regression model in the original paper, it outperformed Linear Regression in accuracy and precision. Its precision reached 89.30\% at a 90/10 split, which was higher than the 74.39\% of the ensemble model. However, its accuracy stabilized at 84.20\%, failing to outperform the ensemble model. This suggests that Logistic Regression may perform better in avoiding misclassifications, but lacks the overall predictive power of the ensemble model. 
+
+
+Regarding the ensemble model combining Random Forest and XGBoost, it consistently achieves higher accuracy than Linear and Logistic Regression. It is found that this improvement is particularly evident in splits with more training data. For example, in the 80/20 split, the ensemble model achieves 83.97\% accuracy, compared to 75.20\% for Linear Regression and 83.10\% for Logistic Regression. This shows that the ensemble model can use the complementary strengths of random forests and XGBoost to effectively model complex relationships in the data and improve prediction accuracy. The improvement in the accuracy of the ensemble model can be directly shown in Figure 2 below.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{fig 2.jpg}
+    \caption{Accuracy Comparison of Original and Ensemble Models Across Train-Test Splits}
+    \label{fig:accuracy-comparison}
+\end{figure}
+
+Although it was found that the accuracy of the ensemble model is lower than that of Logistic Regression in some parts, the ensemble method effectively reduces the trade-off between accuracy and rate, making it more reliable when both metrics are important. In practical applications, accurate prediction and avoiding misclassification are both crucial.
+
+The results demonstrate the superiority of the improved ensemble model, which leverages advanced machine-learning techniques and multiple algorithms to provide higher accuracy while ensuring consistent performance across all data splits.
+
+\subsection{Quantitative Measures of Success}
+
+As for the accuracy of the prediction project,  the ensemble model consistently outperformed Linear and Logistic Regression across all training-test splits. For example, at the 90/10 split, the ensemble model achieved an accuracy of 85.48\%, compared to 76.00\% (Linear Regression) and 84.20\% (Logistic Regression). It was also found that the improvements were more pronounced at higher training ratios.
+
+
+
+\section{Discussion and Future Work}
+Our team’s approach combines Random Forest and XGBoost and achieves an accuracy of 85\%, which is a significant improvement over the baseline models linear regression and logistic regression, which achieved an accuracy of 76\% and 84.2\% respectively. In this project, we created a more reliable model than the reference article and overcame the limitations of its model. Combining the advantages of XGBoost andRandom Forest , we can understand the complex relationships in the data much better , and greatly improve the accuracy of the results we derive, and our predictions are more consistent.
+
+Moreover, one of the key advantages of this ensemble approach is its ability to minimize overfitting, a common issue with single models like logistic regression. Through bootstrapping (in Random Forest) and gradient boosting (in XGBoost), the model becomes more resilient, ensuring it performs well on new, unseen data. This generalization is particularly important in real-world applications, where the model's ability to adapt to varying scenarios and data distributions is critical.
+
+However, this project still has some limitations. A major challenge is the need to optimize hyperparameters, which requires extensive tuning to achieve optimal model performance. Although we utilize grid search and random search techniques to tune the model, there is still room for improvement in computational efficiency, especially when dealing with large datasets. Furthermore, while ensemble models generally perform well, they occasionally lag behind logistic regression in certain specific cases. This shows that while the ensemble approach is powerful, it may not always be the best choice for every data set or situation. 
+
+Additionally, our team believes that data cleaning of the dataset itself could be improved. We performed data cleaning and preprocessing to make the dataset more reliable, but further refinement can help reduce bias and improve model accuracy. Compared with the original article, we have made parameter adjustments based on the actual situation of the supply chain. If we want to solve the problem of category imbalance, we can further improve the results. 
+
+In the future, our team still has proposed several improvements. The most important thing is that our team believes the data sources must be organized according to needs to ensure the data is relevant and accurately reflects the underlying problem. Not only the dataset, identifying additional features that might not be immediately obvious from the data could also lead to a significant improvement in performance. Additionally, we can discover more meaningful variables by deeper study of the feature engineering process, and also can further improve model accuracy. We will explore advanced feature selection techniques to focus on the most influential predictors. We can also investigate alternative model ensembles or hybrid approaches to yield better performance. For example, in datasets with more complex patterns we can use other algorithms such as LightGBM or neural networks to improve prediction accuracy. Hyperparameter optimization can be further refined using techniques such as Bayesian optimization or automated machine learning (AutoML) platforms to simplify the tuning process and reduce computational costs. What's more, it will help ensure the model performs well in a variety of scenarios by analyzing the impact of different data distributions and conducting more robust cross-validation procedures. This will ensure the model is both reliable and adaptable across different settings
+
+We recommend further addressing the class imbalance problem and introducing techniques in dataset cleaning and data acquisition, such as synthetic minority oversampling (SMOTE) to enhance the model's ability to predict rare outcomes. What's more, it will help ensure the model performs well in a variety of scenarios by analyzing the impact of different data distributions and conducting more robust cross-validation procedures. The most important thing is that our team believes that data sources must be organized according to needs.
+
+
+\section{Conclusion}
+This project enhanced the accuracy in predicting products by combining Random Forest and XGBoost algorithms. The model achieves a 85.48\% accuracy rate which is 1.28\% higher than the logistic model before and surpasses the conventional models like linear regression. Leveraging these machine learning methods plays a vital role in capturing intricate data patterns and enhancing prediction reliability.
+
+This study doesn't just add to the area of forecasting products. Also showcases how effective it is to blend different machine learning models, for addressing real world problems successfully. By using data preparation methods and tuning hyperparameters alongside model interpretation techniques we enhance the accuracy and understandability of the models.
+
+The findings of this research underscore the significance of employing algorithms for handling data relationships that are nonlinear, in nature. The holistic method suggested by our team signifies an advancement compared to methods and offers practical benefits, for industries aiming to enhance product quality and diminish defect occurrences.
+
+In the future enhancing the model through feature development tuning methods and dataset enhancements will enhance its overall dependability and usefulness, in supply chain management and other industrial settings.
+
+\section*{Acknowledgment}
+We would like to express our sincere gratitude to our project advisor, Dr. Jeeho Ryoo, for his invaluable guidance, insightful feedback, and continuous support throughout the course of this project. His expertise and encouragement have been instrumental in shaping the direction of our work.
+
+We would also like to thank the Master of Science in Applied Computer Science program at Fairleigh Dickinson University, Vancouver, Canada, for providing the necessary resources and tools that enabled us to carry out this research.
+
+Finally, we are grateful to our team members—Zhengli Xu, Xinyu Chen, Yingyan Du, Youran Xu, and Ling Li—for their hard work and collaboration, as well as our families and friends for their constant support and encouragement.
+
+
+%\bibliographystyle{plain}
+\bibliographystyle{unsrt}
+\bibliography{references1}
+
+
+\end{document}
